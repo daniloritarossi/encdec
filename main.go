@@ -69,12 +69,12 @@ func main() {
 		// fmt.Println("CRYPT")
 		encrypted := encryptString(os.Args[2], key)
 		fmt.Printf("encrypted : %s\n", encrypted)
-	} else if os.Args[1] == "DENC" {
+	} else if os.Args[1] == "DEC" {
 		// fmt.Println("DECRYPT")
 		decrypted := decryptString(os.Args[2], key)
 		fmt.Printf("%s\n", decrypted)
 	} else {
-		log.Fatal("ONLY ENC AND DENC VALUE ACCEPTED")
+		log.Fatal("ONLY ENC AND DEC VALUE ACCEPTED")
 	}
 }
 
