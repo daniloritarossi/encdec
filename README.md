@@ -20,7 +20,7 @@ Stand alone software developed in GO Language, allows you to uniquely encrypt th
 
 ## Features
 
-- Portability on Windows, MAC and UNIX / LINUX operating systems 
+- Portability on Windows, MAC and UNIX / LINUX and much more operating systems 
 - Crypt and Decrypt passwords from a shell_exec
 - Robust password encryption system in GOLANG
 - No further installations are required
@@ -96,7 +96,7 @@ go build -o <your desired name>
 The example before is like:
 
 ```sh
-env GOOS=linux GOARCH=amd64 go build main.go -o encdec
+env GOOS=linux GOARCH=amd64 go build -o encdec main.go 
 ```
 
 you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
