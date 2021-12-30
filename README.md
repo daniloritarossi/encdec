@@ -150,4 +150,4 @@ The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a lo
    [go]: <https://go.dev>   
    [LICENSE.md]: <https://github.com/daniloritarossi/encdec/blob/main/LICENSE>
    [Linux Executable v1.0]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.0>
-   [Table of config contents]: </daniloritarossi/encdec#table-of-config-contents>
+   [Table of config contents]: <https://github.com/daniloritarossi/encdec#table-of-config-contents>
