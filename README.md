@@ -91,7 +91,7 @@ You are generating a build for linux distribution called "encdec" in the same di
 
 you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
 
-you can find all the possible export configurations in the [public repository][Table of config contents] section
+you can find all the possible export configurations in the [Table of config contents] section
 
 ## Development
 
