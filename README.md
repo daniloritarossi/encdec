@@ -1,4 +1,4 @@
-# ENC and DENC PASSWORD
+# ENC and DEC PASSWORD
 ## _Developed in GOLANG_
 [![Danilo Ritarossi](https://media-exp1.licdn.com/dms/image/C5116AQHnrgF1Z-9Wyg/profile-displaybackgroundimage-shrink_200_800/0/1516649190076?e=1644451200&v=beta&t=uejYUnxpt_2lERCRXybdRFr4cRf8mGSMx2Y27EkVNsw)](https://www.linkedin.com/in/daniloritarossi/)
 
@@ -37,7 +37,7 @@ And of course Danilo itself is open source with a [public repository][danilorita
 
 ## Installation
 
-ENC and DENC PASSWORD requires [public repository][go] v1.17+ installed to run.
+ENC and DEC PASSWORD requires [public repository][go] v1.17+ installed to run.
 
 If you want compile the code you need to install the dependency with "github.com/denisbrodbeck/machineid"
 move to directory installation es: c:\Program Files\Go and put the code
@@ -48,7 +48,7 @@ go get github.com/denisbrodbeck/machineid
 
 #### Easy to use
 
-Normally you can use directly the executable **encdenc** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.0]  ) once loaded into the system you can generate the encrypted password as I describe it
+Normally you can use directly the executable **encdec** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.0]  ) once loaded into the system you can generate the encrypted password as I describe it
 
 ENCRYPT--> You can run the program from the bash command by running the statement:
 
@@ -62,10 +62,10 @@ The result is something like:
 encrypted : 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
 ```
 
-DENCRYPT--> You can run the program from the bash command by running the statement:
+DECRYPT--> You can run the program from the bash command by running the statement:
 
 ```sh
-go run main.go DENC 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
+go run main.go DEC 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
 ```
 
 The result is something like:
@@ -82,7 +82,7 @@ For production release move to directory program es: c:\Users\MyName\Go\src and 
 ```sh
 env GOOS=linux GOARCH=amd64 go build main.go
 ```
-You are generating a build for linux distribution called "encdenc" in the same directory
+You are generating a build for linux distribution called "encdec" in the same directory
 
 you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
 
@@ -102,6 +102,6 @@ The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a lo
 
    [daniloritarossi]: <https://github.com/daniloritarossi>
    [go]: <https://go.dev>   
-   [LICENSE.md]: <https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE>
+   [LICENSE.md]: <https://github.com/daniloritarossi/encdec/blob/main/LICENSE>
    [Linux Executable v1.0]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.0>
    
