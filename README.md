@@ -77,8 +77,13 @@ If you want you can generate an executable code, see section "Building for sourc
 
 #### Building for source
 
-For production release move to directory program es: c:\Users\MyName\Go\src and past the code:
+For production release move to directory program es: c:\Users\MYNAME\Go\src and past the code:
 
+```sh
+env GOOS=target-OS GOARCH=target-architecture go build package-import-path
+```
+
+Example is for LINUX release:
 ```sh
 env GOOS=linux GOARCH=amd64 go build main.go
 ```
@@ -86,11 +91,52 @@ You are generating a build for linux distribution called "encdec" in the same di
 
 you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
 
+you can find all the possible export configurations in the Table of config contents section
+
 ## Development
 
 Want to contribute? Great!
 
 Make a change in your file and instantaneously see your updates!
+
+## Table of config contents 
+
+The following table shows the possible combinations of GOOS and GOARCH you can use:
+
+| GOOS - Target Operating System       | GOARCH - Target Platform  |
+| ------------------------------------ |:-------------------------:| 
+|android	|arm|
+|darwin	|386|
+|darwin	|amd64|
+|darwin	|arm|
+|darwin	|arm64|
+|dragonfly	|amd64|
+|freebsd	|386|
+|freebsd	|amd64|
+|freebsd	|arm|
+|linux	|386|
+|linux	|amd64|
+|linux	|arm|
+|linux	|arm64|
+|linux	|ppc64|
+|linux	|ppc64le|
+|linux	|mips|
+|linux	|mipsle|
+|linux	|mips64|
+|linux	|mips64le|
+|netbsd	|386|
+|netbsd	|amd64|
+|netbsd	|arm|
+|openbsd	|386|
+|openbsd	|amd64|
+|openbsd	|arm|
+|plan9	|386|
+|plan9	|amd64|
+|solaris	|amd64|
+|windows	|386|
+|windows	|amd64|	
+
+
 
 ## License
 
@@ -104,4 +150,4 @@ The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a lo
    [go]: <https://go.dev>   
    [LICENSE.md]: <https://github.com/daniloritarossi/encdec/blob/main/LICENSE>
    [Linux Executable v1.0]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.0>
-   
+   [Table of config contents](/daniloritarossi/encanddendc)
