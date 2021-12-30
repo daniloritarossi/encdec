@@ -87,7 +87,17 @@ Example is for LINUX release:
 ```sh
 env GOOS=linux GOARCH=amd64 go build main.go
 ```
-You are generating a build for linux distribution called "encdec" in the same directory
+You are generating a build for linux distribution called "main" in the same directory,
+if you want you can create a package with other name, use this code:
+
+```sh
+go build -o <your desired name>
+```
+The example before is like:
+
+```sh
+env GOOS=linux GOARCH=amd64 go build main.go -o encdec
+```
 
 you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
 
