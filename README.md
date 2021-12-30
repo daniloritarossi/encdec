@@ -1,4 +1,4 @@
-# ENC and DEC PASSWORD
+# ENC and DEC STRING (es:PASSWORD)
 ## _Developed in GOLANG_
 [![Danilo Ritarossi](https://media-exp1.licdn.com/dms/image/C5116AQHnrgF1Z-9Wyg/profile-displaybackgroundimage-shrink_200_800/0/1516649190076?e=1644451200&v=beta&t=uejYUnxpt_2lERCRXybdRFr4cRf8mGSMx2Y27EkVNsw)](https://www.linkedin.com/in/daniloritarossi/)
 
@@ -13,16 +13,18 @@
 
 
 
-Stand alone software developed in GO Language, allows you to uniquely encrypt the passwords of the application based on keywords:
+Stand alone software developed in GO Language, allows you to uniquely encrypt the string of the application based on keywords:
 
 - Machine ID
 - OS
 
+***It is generally very useful for encrypting passwords***
+
 ## Features
 
 - Portability on Windows, MAC and UNIX / LINUX and much more operating systems 
-- Crypt and Decrypt passwords from a shell_exec
-- Robust password encryption system in GOLANG
+- Crypt and Decrypt string (password) from a shell_exec
+- Robust string encryption system in GOLANG
 - No further installations are required
 - It has no dependencies on the operating system
 
@@ -37,7 +39,7 @@ And of course Danilo itself is open source with a [public repository][danilorita
 
 ## Installation
 
-ENC and DEC PASSWORD requires [public repository][go] v1.17+ installed to run.
+ENC and DEC STRING requires [public repository][go] v1.17+ installed to run.
 
 If you want compile the code you need to install the dependency with "github.com/denisbrodbeck/machineid"
 move to directory installation es: c:\Program Files\Go and put the code
