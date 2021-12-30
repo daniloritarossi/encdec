@@ -1,4 +1,5 @@
-# ENC and DEC STRING ###### (es:PASSWORD)
+# ENC and DEC STRING 
+###### (es:PASSWORD)
 ## _Developed in GOLANG_
 [![Danilo Ritarossi](https://media-exp1.licdn.com/dms/image/C5116AQHnrgF1Z-9Wyg/profile-displaybackgroundimage-shrink_200_800/0/1516649190076?e=1644451200&v=beta&t=uejYUnxpt_2lERCRXybdRFr4cRf8mGSMx2Y27EkVNsw)](https://www.linkedin.com/in/daniloritarossi/)
 
