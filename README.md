@@ -1,0 +1,107 @@
+# ENC and DENC PASSWORD
+## _Developed in GOLANG_
+[![Danilo Ritarossi](https://media-exp1.licdn.com/dms/image/C5116AQHnrgF1Z-9Wyg/profile-displaybackgroundimage-shrink_200_800/0/1516649190076?e=1644451200&v=beta&t=uejYUnxpt_2lERCRXybdRFr4cRf8mGSMx2Y27EkVNsw)](https://www.linkedin.com/in/daniloritarossi/)
+
+
+[![License: GPL v3](https://img.shields.io/badge/license-MIT-green)](https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE)
+[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](https://github.com/gomods/athens)
+![PowerShell Gallery](https://img.shields.io/powershellgallery/p/DNS.1.1.1.1)
+![GO](https://img.shields.io/static/v1?label=Version&message=1.0&color=<COLOR>)
+
+
+
+
+
+
+Stand alone software developed in GO Language, allows you to uniquely encrypt the passwords of the application based on keywords:
+
+- Machine ID
+- OS
+
+## Features
+
+- Portability on Windows, MAC and UNIX / LINUX operating systems 
+- Crypt and Decrypt passwords from a shell_exec
+- Robust password encryption system in GOLANG
+- No further installations are required
+- It has no dependencies on the operating system
+
+## Tech
+
+We use a number of open source projects to work properly:
+
+- [GO] - Developed
+
+
+And of course Danilo itself is open source with a [public repository][daniloritarossi] on GitHub.
+
+## Installation
+
+ENC and DENC PASSWORD requires [public repository][go] v1.17+ installed to run.
+
+If you want compile the code you need to install the dependency with "github.com/denisbrodbeck/machineid"
+move to directory installation es: c:\Program Files\Go and put the code
+
+```sh
+go get github.com/denisbrodbeck/machineid
+```
+
+#### Easy to use
+
+Normally you can use directly the executable **encdenc** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.0]  ) once loaded into the system you can generate the encrypted password as I describe it
+
+ENCRYPT--> You can run the program from the bash command by running the statement:
+
+```sh
+go run main.go ENC PasswordToEncrypt
+```
+
+The result is something like:
+
+```sh
+encrypted : 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
+```
+
+DENCRYPT--> You can run the program from the bash command by running the statement:
+
+```sh
+go run main.go DENC 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
+```
+
+The result is something like:
+
+```sh
+PasswordToEncrypt
+```
+If you want you can generate an executable code, see section "Building for source"
+
+#### Building for source
+
+For production release move to directory program es: c:\Users\MyName\Go\src and past the code:
+
+```sh
+env GOOS=linux GOARCH=amd64 go build main.go
+```
+You are generating a build for linux distribution called "encdenc" in the same directory
+
+you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
+
+## Development
+
+Want to contribute? Great!
+
+Make a change in your file and instantaneously see your updates!
+
+## License
+
+GNU General Public License v3.0
+The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a look at the [public repository][LICENSE.md] for more details.
+
+
+**Free Software, Hell Yeah!**
+
+   [daniloritarossi]: <https://github.com/daniloritarossi>
+   [go]: <https://go.dev>   
+   [LICENSE.md]: <https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE>
+   [Linux Executable v1.0]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.0>
+   
