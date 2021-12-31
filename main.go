@@ -46,8 +46,8 @@ func main() {
 	// Get Os in const myOS
 	const myOS = runtime.GOOS
 
-	//
-	const sk = "SK-1"
+	// jh const
+	const jh = "jY-1"
 
 	//Unique ID combination of mId (Machine ID) + myOS (IDOS)
 	var uniqueId string = sk + mId + myOS

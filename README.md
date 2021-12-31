@@ -88,7 +88,7 @@ If you want you can generate an executable code, see section "Building for sourc
 First you can (recommended to add additional level of security you have to) change the secret key
 
 ```sh
-const sk = "SK-1"
+const jh = "jY-1"
 ```
 anche se non dovessi cambiare la special key non preoccuparti il software userà la stringa di default and you can use it anyway
 
