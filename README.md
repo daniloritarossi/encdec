@@ -61,7 +61,7 @@ Normally you can use directly the executable **encdec** file already generated a
 ENCRYPT--> You can run the program from the bash command by running the statement:
 
 ```sh
-go run main.go ENC PasswordToEncrypt
+go run main.go ENC 'PasswordToEncrypt'
 ```
 
 The result is something like:
