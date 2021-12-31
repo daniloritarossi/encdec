@@ -46,8 +46,11 @@ func main() {
 	// Get Os in const myOS
 	const myOS = runtime.GOOS
 
+	//
+	const sk = "INSERT_HERE_SPECIALKEY"
+
 	//Unique ID combination of mId (Machine ID) + myOS (IDOS)
-	var uniqueId string = myOS + mId
+	var uniqueId string = sk + mId + myOS
 
 	// Create a key based on OS and machine ID es: windows7fd705af-1b77-42c0-9f00-42330d32e19d
 	var length = len([]rune(uniqueId))
