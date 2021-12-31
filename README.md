@@ -41,6 +41,10 @@ And of course Danilo itself is open source with a [public repository][danilorita
 
 ENC and DEC STRING requires [public repository][go] v1.17+ installed to run.
 
+Don't worry everything has been handled with GO modules so you don't have to do anything more than download the project!
+
+***The add-on module used to achieve some functions fa riferimento a "github.com/denisbrodbeck/machineid";***
+
 If you want compile the code you need to install the dependency with "github.com/denisbrodbeck/machineid"
 move to directory installation es: c:\Program Files\Go and put the code
 
