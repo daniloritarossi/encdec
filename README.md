@@ -15,8 +15,10 @@
 
 Stand alone software developed in GO Language, allows you to uniquely encrypt the string of the application based on keywords:
 
+- Special key
 - Machine ID
 - OS
+
 
 ***It is generally very useful for encrypting passwords***
 
@@ -83,7 +85,14 @@ If you want you can generate an executable code, see section "Building for sourc
 
 #### Building for source
 
-For production release move to directory program es: c:\Users\MYNAME\Go\src and past the code:
+First you can (recommended to add additional level of security you have to) change the secret key
+
+```sh
+const sk = "SK-1"
+```
+anche se non dovessi cambiare la special key non preoccuparti il software userà la stringa di default and you can use it anyway
+
+For production release move to directory program es: c:\Users\MYNAME\Go and past the code:
 
 ```sh
 env GOOS=target-OS GOARCH=target-architecture go build package-import-path

@@ -47,7 +47,7 @@ func main() {
 	const myOS = runtime.GOOS
 
 	//
-	const sk = "INSERT_HERE_SPECIALKEY"
+	const sk = "SK-1"
 
 	//Unique ID combination of mId (Machine ID) + myOS (IDOS)
 	var uniqueId string = sk + mId + myOS
