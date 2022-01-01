@@ -6,7 +6,7 @@
 [![License: GPL v3](https://img.shields.io/badge/license-MIT-green)](https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](https://github.com/gomods/athens)
 ![PowerShell Gallery](https://img.shields.io/powershellgallery/p/DNS.1.1.1.1)
-![GO](https://img.shields.io/static/v1?label=Version&message=1.0&color=<COLOR>)
+![GO](https://img.shields.io/static/v1?label=Version&message=1.1&color=<COLOR>)
 
 
 
