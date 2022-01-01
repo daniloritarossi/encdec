@@ -47,10 +47,10 @@ func main() {
 	const myOS = runtime.GOOS
 
 	// jh const
-	const jh = "jY-1"
+	const j = "jY-1"
 
 	//Unique ID combination of mId (Machine ID) + myOS (IDOS)
-	var uniqueId string = sk + mId + myOS
+	var uniqueId string = j + mId + myOS
 
 	// Create a key based on OS and machine ID es: windows7fd705af-1b77-42c0-9f00-42330d32e19d
 	var length = len([]rune(uniqueId))
