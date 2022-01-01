@@ -56,7 +56,7 @@ go get github.com/denisbrodbeck/machineid
 
 #### Easy to use
 
-Normally you can use directly the executable **encdec** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.0]  ) once loaded into the system you can generate the encrypted password as I describe it
+Normally you can use directly the executable **encdec** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.1]  ) once loaded into the system you can generate the encrypted password as I describe it
 
 ENCRYPT--> You can run the program from the bash command by running the statement:
 
@@ -173,5 +173,5 @@ The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a lo
    [daniloritarossi]: <https://github.com/daniloritarossi>
    [go]: <https://go.dev>   
    [LICENSE.md]: <https://github.com/daniloritarossi/encdec/blob/main/LICENSE>
-   [Linux Executable v1.0]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.0>
+   [Linux Executable v1.1]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.1>
    [Table of config contents]: <https://github.com/daniloritarossi/encdec#table-of-config-contents>
