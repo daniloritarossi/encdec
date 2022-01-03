@@ -1,4 +1,4 @@
-module github.com/daniloritarossi/encdec
+module encdenc
 
 go 1.17
 
