@@ -48,3 +48,4 @@ nbdist/
 
 # Go workspace file
 go.work
+logs.txt
