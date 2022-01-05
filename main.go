@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encdenc/lib"
+	"./lib"
 	"fmt"
 	"log"
 	"os"
