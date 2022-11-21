@@ -92,7 +92,7 @@ const j = "jY-1"
 ```
 even if you don't have to change the special key don't worry the software will use the default string and you can use it anyway
 
-Second you **must define the path for the log in main.go line 16**
+Second you **must define the path for the log in main.go line 17**
 
 ```const pathLog = "/opt/frm/application/libraries/"
 ```
