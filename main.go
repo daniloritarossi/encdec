@@ -13,8 +13,10 @@ var (
 	ErrorLogger   *log.Logger
 )
 
+const pathLog = "/opt/frm/application/libraries/"
+
 func init() {
-	file, err := os.OpenFile("./enc_dec.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
+	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
 		log.Fatal(err)
 	}

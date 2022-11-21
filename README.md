@@ -85,12 +85,18 @@ If you want you can generate an executable code, see section "Building for sourc
 
 #### Building for source
 
-First you can (recommended to add additional level of security you have to) change the secret key
+First you can (recommended to add additional level of security you have to) **change the secret key**
 
 ```sh
 const j = "jY-1"
 ```
 even if you don't have to change the special key don't worry the software will use the default string and you can use it anyway
+
+Second you **must define the path for the log in main.go line 16**
+
+```const pathLog = "/opt/frm/application/libraries/"
+```
+
 For production release move to directory program es: c:\Users\MYNAME\Go and past the code:
 
 ```sh
@@ -113,9 +119,15 @@ The example before is like:
 env GOOS=linux GOARCH=amd64 go build -o encdec main.go 
 ```
 
-you can run the executable from a SHELL_EXEC in the same way as reported in the "Easy to use" section
+you can run the executable from a SHELL_EXEC  in the same way as reported in the "Easy to use" section
 
-you can find all the possible export configurations in the [Table of config contents] section
+you can find all the possible export configurations in the [Table of config contents] section.
+
+Remember: env is a LINUX COMMAND you must use it in LINUX or in GIT BASH
+
+## Errors 
+
+If you meet errors the key is wrong, remember you can use this software only on a single machine
 
 ## Development
 

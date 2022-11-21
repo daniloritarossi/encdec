@@ -7,11 +7,11 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"github.com/denisbrodbeck/machineid"
 	"io"
 	"log"
-	"runtime"
 
-	"github.com/denisbrodbeck/machineid"
+	"runtime"
 )
 
 func GenerateKey() string {
