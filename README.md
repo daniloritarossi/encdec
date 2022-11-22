@@ -1,6 +1,6 @@
 # ENC and DEC STRING 
 ## _Developed in GOLANG_
-[![Danilo Ritarossi](https://media-exp1.licdn.com/dms/image/C5116AQHnrgF1Z-9Wyg/profile-displaybackgroundimage-shrink_200_800/0/1516649190076?e=1664409600&v=beta&t=OmqJIzDVHFn48tK7p9McwWiB3nVs2cHFWOTAkB4xUR0)](https://www.linkedin.com/in/daniloritarossi/)
+[![Danilo Ritarossi](https://github.com/daniloritarossi/encdec/blob/master/background.jpg?raw=true)](https://www.linkedin.com/in/daniloritarossi/)
 
 
 [![License: GPL v3](https://img.shields.io/badge/license-MIT-green)](https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE)
