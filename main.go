@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./lib"
+	"encdenc/lib"
 	"fmt"
 	"log"
 	"os"
@@ -14,10 +14,10 @@ var (
 )
 
 // For example const pathLog = "/opt/frm/application/libraries/"
-const pathLog = ""
+const pathLog = "/opt/frm/writable/logs/"
 
 func init() {
-	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
+	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0774)
 	if err != nil {
 		log.Fatal(err)
 	}

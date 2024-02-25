@@ -87,17 +87,18 @@ If you want you can generate an executable code, see section "Building for sourc
 
 First you can (recommended to add additional level of security you have to) **change the secret key**
 
-```sh
+```sh 
 const j = "jY-1"
 ```
 even if you don't have to change the special key don't worry the software will use the default string and you can use it anyway
 
 Second you **must define the path for the log in main.go line 17**
 
-```const pathLog = "/opt/frm/application/libraries/"
+```sh
+const pathLog = "/opt/frm/application/libraries/"
 ```
 
-For production release move to directory program es: c:\Users\MYNAME\Go and past the code:
+For production release you must move to directory module/program (development) es: c:\Users\MYNAME\Go and past the code:
 
 ```sh
 env GOOS=target-OS GOARCH=target-architecture go build package-import-path
