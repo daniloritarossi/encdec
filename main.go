@@ -18,6 +18,7 @@ const pathLog = "/opt/frm/writable/logs/"
 
 func init() {
 	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_APPEND|os.O_CREATE, 0664)
+
 	// Permission change
 	err = os.Chmod(pathLog+"enc_dec.log", 0664)
 	if err != nil {
