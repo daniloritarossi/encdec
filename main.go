@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/user"
+	"syscall"
 )
 
 var (
@@ -13,24 +15,62 @@ var (
 	ErrorLogger   *log.Logger
 )
 
-// For example const pathLog = "/opt/frm/application/libraries/"
 const pathLog = "/opt/frm/writable/logs/"
 
-func init() {
-	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_APPEND|os.O_CREATE, 0664)
+func main() {
 
-	// Permission change
-	err = os.Chmod(pathLog+"enc_dec.log", 0664)
+	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
+
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Errore:", err)
+		return
+	}
+	defer file.Close()
+
+	// FileInfo
+	fileInfo, err := os.Stat(pathLog + "enc_dec.log")
+
+	// CHECK permission log file
+	// GET permission file and check if 664 is correct
+	if fmt.Sprintf("%o", fileInfo.Mode().Perm()) != "664" {
+
+		// SET THE LOG WRITE FILE
+		log.SetOutput(file)
+		log.Println("WARNING ::: Current file has no correct 664 permission. I'll Try to correct it, CONTINUE")
+
+		// GET owner file
+		owner, err := user.LookupId(fmt.Sprint(fileInfo.Sys().(*syscall.Stat_t).Uid))
+		if err != nil {
+			fmt.Println("Error for the owner:", err)
+			return
+		}
+		// fmt.Printf("Owner: %s\n", owner.Username)
+
+		// Ottenere le informazioni sull'utente corrente
+		userCurrent, err := user.Current()
+		if err != nil {
+			fmt.Println("Error for the curretn user:", err)
+			return
+		}
+		// Stampa il nome utente corrente
+		// fmt.Printf("Nome Utente Corrente: %s\n", userCurrent.Username)
+		if owner.Username == userCurrent.Username {
+			log.Println("INFO ::: CurrentUser and Owner file is the same, CONTINUE")
+			// Permission change
+			err = os.Chmod(pathLog+"enc_dec.log", 0664)
+
+			if err != nil {
+				log.Println("ERROR ::: CHANGE PERMISSION LOG FILE", err)
+				log.Fatal(err)
+			} else {
+				log.Println("INFO ::: OK ::: CHANGE PERMISSION LOG FILE COMMITTED NO ERRORS  :: END")
+			}
+		} else {
+			log.Println("WARNING ::: CurrentUser and Owner file is not the same")
+		}
+
 	}
 
-	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
-}
-
-func main() {
 	key := lib.GenerateKey()
 	if os.Args[1] == "ENC" {
 		encrypted := lib.EncryptString(os.Args[2], key)

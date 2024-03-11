@@ -126,9 +126,9 @@ you can find all the possible export configurations in the [Table of config cont
 
 Remember: env is a LINUX COMMAND you must use it in LINUX or in GIT BASH
 
-Export variables in LINUX env 
+Export variables in LINUX env, Open .bashrc file and add following lines at the bottom and save the file:
+
 ```sh
-Open .bashrc file and add following lines at the bottom and save the file.
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
