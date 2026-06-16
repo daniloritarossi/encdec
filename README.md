@@ -1,11 +1,11 @@
 # ENCDEC (encrypt/decrypt string)
 
-CLI tool written in Go to encrypt/decrypt strings using AES-GCM.
+CLI tool written in Go to encrypt/decrypt strings using **AES-GCM**.
 
 It supports **two modes**:
 
 1. **Machine-bound mode (default)**: the encryption key is deterministically derived from:
-   - a secret prefix (configurable)
+   - a secret prefix (configurable via env var)
    - Machine ID
    - OS  
    This means ciphertext is typically decryptable only on the *same machine*.
@@ -24,16 +24,42 @@ It supports **two modes**:
 - Two modes:
   - Machine-bound key derivation (**SHA-256**, 32 bytes → AES-256)
   - Passphrase-based derivation (**Argon2id + random salt**, AES-256)
-- “Best-effort” logging (does not block encryption/decryption if logging fails)
-- Input size limits (default ~1 MiB) to mitigate trivial local DoS
+- Optional file logging (best-effort; failures do not stop the CLI)
+- Input size limits (default **1 MiB**) to mitigate trivial local DoS
 
 ---
 
 ## Requirements
 
-- Go **1.17+** (tested on Go **1.18**)
+- Go **1.17+** (as per `go.mod`)
 
 Dependencies are managed via Go modules (`go.mod`).
+
+---
+
+## Project layout
+
+- `main.go`: CLI entrypoint and command dispatch
+- `lib/lib.go`: crypto and key-derivation library (AES-GCM, machine-bound key, passphrase key)
+
+---
+
+## Usage
+
+The CLI expects **2 arguments** after the program name:
+
+```txt
+usage: encdec ENC <plain-text> | encdec DEC <hex-ciphertext> | encdec ENCPASS <plain-text> | encdec DECPASS <p1:ciphertext>
+```
+
+Accepted operations:
+
+- `ENC`     encrypt (machine-bound mode)
+- `DEC`     decrypt (machine-bound mode)
+- `ENCPASS` encrypt (passphrase mode, requires `ENCDEC_PASS`)
+- `DECPASS` decrypt (passphrase mode, requires `ENCDEC_PASS`)
+
+If an error occurs, the program prints the error on **stderr** and exits with **code 1**.
 
 ---
 
@@ -45,9 +71,15 @@ From the module folder (`encdec/`):
 go mod tidy
 ```
 
-### Encrypt / Decrypt (machine-bound)
+### Run directly with `go run`
 
-Encrypt:
+Examples below use `go run . ...` but the same arguments work with the built binary.
+
+---
+
+## Encrypt / Decrypt (machine-bound)
+
+### Encrypt
 
 ```sh
 go run . ENC 'PasswordToEncrypt'
@@ -59,7 +91,11 @@ Output:
 encrypted : <hex-ciphertext>
 ```
 
-Decrypt:
+Notes:
+- The output ciphertext is **hex-encoded**.
+- Internally the ciphertext contains the **nonce** prepended to the AES-GCM output (this is handled transparently by the tool).
+
+### Decrypt
 
 ```sh
 go run . DEC <hex-ciphertext>
@@ -71,6 +107,9 @@ Output:
 PasswordToEncrypt
 ```
 
+Notes:
+- Decryption succeeds only if performed on the **same machine** (same Machine ID + OS) and with the same `ENCDEC_SECRET_PREFIX` used at encryption time.
+
 ---
 
 ## Passphrase mode (portable) (optional)
@@ -78,13 +117,13 @@ PasswordToEncrypt
 In this mode the passphrase is read from environment variable `ENCDEC_PASS`
 (to avoid passing secrets through CLI args / history / process list).
 
-Set passphrase:
+### Set passphrase
 
 ```sh
 export ENCDEC_PASS='your-strong-passphrase'
 ```
 
-Encrypt:
+### Encrypt
 
 ```sh
 go run . ENCPASS 'PasswordToEncrypt'
@@ -96,7 +135,7 @@ Output:
 encrypted : p1:<salt_b64>:<hex-ciphertext>
 ```
 
-Decrypt:
+### Decrypt
 
 ```sh
 go run . DECPASS 'p1:<salt_b64>:<hex-ciphertext>'
@@ -108,9 +147,23 @@ Output:
 PasswordToEncrypt
 ```
 
-Notes:
-- The `p1:` prefix identifies the passphrase ciphertext format version.
-- The salt is encoded using `base64.RawStdEncoding`.
+Passphrase ciphertext format details (as implemented in `lib/lib.go`):
+
+- Prefix: `p1:` (format/version marker)
+- Full format: `p1:<salt_b64>:<cipher_hex>`
+- `<salt_b64>` is encoded with `base64.RawStdEncoding`
+- Salt length is **16 bytes** (randomly generated on encryption)
+- The derived key uses Argon2id with parameters:
+  - iterations: `1`
+  - memory: `64*1024` KiB (≈ **64 MiB**)
+  - parallelism: `4`
+  - output key length: `32` bytes (AES-256)
+
+If the ciphertext does not start with `p1:` the tool returns:
+
+```txt
+invalid passphrase ciphertext format (missing p1: prefix)
+```
 
 ---
 
@@ -134,17 +187,25 @@ GOOS=linux GOARCH=amd64 go build -o encdec .
 
 ### `ENCDEC_SECRET_PREFIX` (machine-bound mode)
 
-Override the default secret prefix used in machine-bound key derivation:
+Overrides the default secret prefix used in machine-bound key derivation.
+
+- If not set, the code uses the built-in default prefix (see `defaultSecretKeyPrefix` in `lib/lib.go`).
+- If you keep the default value and the code is public, the prefix should be considered **not secret**.
+
+Example:
 
 ```sh
 export ENCDEC_SECRET_PREFIX='my-secret-prefix'
 ```
 
-If you keep the default value, encryption/decryption will still work, but the prefix is not secret if the code is public.
+Important:
+- To decrypt successfully in machine-bound mode, `ENCDEC_SECRET_PREFIX` must match the value used during encryption.
 
 ### `ENCDEC_PASS` (passphrase mode)
 
-Required for `ENCPASS` / `DECPASS`:
+Required for `ENCPASS` / `DECPASS`.
+
+Example:
 
 ```sh
 export ENCDEC_PASS='your-strong-passphrase'
@@ -160,16 +221,43 @@ The CLI tries to write logs to:
 const pathLog = "/opt/frm/writable/logs/"
 ```
 
-Logging is **best-effort**:
-- if the path is not writable or not suitable for the current OS, the program continues without file logging.
+Behavior (best-effort):
+
+- The tool attempts to create the directory and append to:  
+  `/opt/frm/writable/logs/enc_dec.log`
+- If any step fails (directory not writable/missing permissions/path not valid), the program continues **without** file logging.
+
+Platform notes (as implemented in `main.go`):
+
+- On **Windows**, file logging is skipped because the fixed Unix path `/opt/...` is not suitable.
+- On non-Windows systems, the tool attempts to enforce file permissions `0664` on the log file when possible.
 
 ---
 
 ## Input size limits
 
 To reduce accidental/malicious resource usage, inputs are limited:
-- plaintext max: ~1 MiB
-- ciphertext max: ~1 MiB (hex chars)
+
+Library limits (`lib/lib.go`):
+
+- plaintext max: **1 MiB**
+- ciphertext max: **1 MiB** of hex chars
+
+CLI-level additional check (`main.go`):
+
+- for `DEC`, ciphertext max: **1 MiB** of hex chars (secondary defense)
+
+If exceeded, the tool returns an error similar to:
+
+```txt
+plaintext too large (max 1048576 bytes)
+```
+
+or:
+
+```txt
+ciphertext too large (max 1048576 hex chars)
+```
 
 ---
 
