@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/user"
 	"path/filepath"
 	"runtime"
-	"syscall"
 
 	"encdenc/lib"
 )
@@ -49,7 +47,10 @@ func run(args []string, stdout, stderr *os.File) error {
 
 	switch op {
 	case "ENC":
-		key := lib.GenerateKey()
+		key, err := lib.GenerateKey()
+		if err != nil {
+			return err
+		}
 		encrypted, err := lib.EncryptString(input, key)
 		if err != nil {
 			return err
@@ -57,7 +58,10 @@ func run(args []string, stdout, stderr *os.File) error {
 		fmt.Fprintf(stdout, "encrypted : %s\n", encrypted)
 		return nil
 	case "DEC":
-		key := lib.GenerateKey()
+		key, err := lib.GenerateKey()
+		if err != nil {
+			return err
+		}
 		decrypted, err := lib.DecryptString(input, key)
 		if err != nil {
 			return err
@@ -114,27 +118,7 @@ func setupLogging() {
 	}
 	log.SetOutput(file)
 
-	// Permission/owner checks are Unix-specific; keep them only where supported.
-	if runtime.GOOS == "windows" {
-		return
-	}
-
-	fileInfo, err := os.Stat(logPath)
-	if err != nil {
-		return
-	}
-
-	if fileInfo.Mode().Perm() != 0o664 {
-		owner, err := user.LookupId(fmt.Sprint(fileInfo.Sys().(*syscall.Stat_t).Uid))
-		if err != nil {
-			return
-		}
-		userCurrent, err := user.Current()
-		if err != nil {
-			return
-		}
-		if owner.Username == userCurrent.Username {
-			_ = os.Chmod(logPath, 0o664)
-		}
-	}
+	// Permission/owner enforcement is Unix-specific (needs syscall.Stat_t).
+	// Implemented per-platform via build tags so the program compiles on Windows too.
+	enforceLogPerm(logPath)
 }

@@ -167,19 +167,121 @@ invalid passphrase ciphertext format (missing p1: prefix)
 
 ---
 
-## Building
+## Building for source
 
-Build binary:
+### 1. (Recommended) change the secret prefix
+
+For an extra layer of security in **machine-bound mode**, change the secret prefix.
+
+- Preferred (no rebuild): set the env var at runtime
+  ```sh
+  export ENCDEC_SECRET_PREFIX='my-secret-prefix'
+  ```
+- Or compile a custom default into the binary by editing `defaultSecretKeyPrefix` in `lib/lib.go`:
+  ```go
+  const defaultSecretKeyPrefix = "jY-1"
+  ```
+
+### 2. (Optional) change the log path
+
+If you want file logging at a different location, edit `pathLog` in `main.go`:
+
+```go
+const pathLog = "/opt/frm/writable/logs/"
+```
+
+### 3. Build the binary
+
+> Note: the project is now a multi-file Go package (`main.go` + `lib/`), so build the
+> **package** (`.`), not a single file. `go build main.go` from older versions no longer works.
 
 ```sh
 go build -o encdec .
 ```
 
-Cross-compile example (Linux amd64):
+### Cross-compilation
+
+General form:
 
 ```sh
-GOOS=linux GOARCH=amd64 go build -o encdec .
+env GOOS=<target-OS> GOARCH=<target-architecture> go build -o encdec .
 ```
+
+> `env` is a Linux/Unix command. On Windows use **Git Bash**, or set the variables with
+> PowerShell / `set` (see Windows example below).
+
+**Linux example (amd64):**
+```sh
+env GOOS=linux GOARCH=amd64 go build -o encdec .
+```
+
+**macOS examples:**
+```sh
+# Intel Macs
+env GOOS=darwin GOARCH=amd64 go build -o encdec .
+
+# Apple Silicon (M1/M2/M3...)
+env GOOS=darwin GOARCH=arm64 go build -o encdec .
+```
+
+**Windows examples (produces `encdec.exe`):**
+
+From Git Bash / Linux / macOS:
+```sh
+env GOOS=windows GOARCH=amd64 go build -o encdec.exe .
+```
+
+From Windows PowerShell:
+```powershell
+$env:GOOS="windows"; $env:GOARCH="amd64"; go build -o encdec.exe .
+```
+
+From Windows `cmd.exe`:
+```bat
+set GOOS=windows
+set GOARCH=amd64
+go build -o encdec.exe .
+```
+
+> Reminder: on Windows the fixed Unix log path `/opt/...` is not used, so file logging is
+> skipped automatically (see [Logging](#logging)).
+
+### Table of config contents (GOOS / GOARCH)
+
+Common combinations supported by the Go toolchain:
+
+| GOOS (Target OS) | GOARCH (Target architecture) |
+| ---------------- |:----------------------------:|
+| android          | arm                          |
+| darwin           | amd64                        |
+| darwin           | arm64                        |
+| dragonfly        | amd64                        |
+| freebsd          | 386                          |
+| freebsd          | amd64                        |
+| freebsd          | arm                          |
+| linux            | 386                          |
+| linux            | amd64                        |
+| linux            | arm                          |
+| linux            | arm64                        |
+| linux            | ppc64                        |
+| linux            | ppc64le                      |
+| linux            | mips                         |
+| linux            | mipsle                       |
+| linux            | mips64                       |
+| linux            | mips64le                     |
+| netbsd           | 386                          |
+| netbsd           | amd64                        |
+| netbsd           | arm                          |
+| openbsd          | 386                          |
+| openbsd          | amd64                        |
+| openbsd          | arm                          |
+| plan9            | 386                          |
+| plan9            | amd64                        |
+| solaris          | amd64                        |
+| windows          | 386                          |
+| windows          | amd64                        |
+
+> Run `go tool dist list` to see the full, up-to-date list for your Go version.
 
 ---
 

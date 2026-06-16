@@ -43,18 +43,23 @@ const (
 //
 // NOTE: This is a deterministic, machine-bound derivation; it is not a password-based KDF.
 // If machineID changes (or you move the ciphertext to another machine), decryption will fail.
-func GenerateKey() string {
-	key := generateKeyBytes()
-	return hex.EncodeToString(key)
+//
+// It returns an error (instead of panicking) when the machine id cannot be read,
+// so the CLI can honor its contract: print the error on stderr and exit 1.
+func GenerateKey() (string, error) {
+	key, err := generateKeyBytes()
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(key), nil
 }
 
 // generateKeyBytes derives a 32-byte key using SHA-256 and returns raw bytes.
 // This avoids hex roundtrips and ensures the effective AES key size is 32 bytes.
-func generateKeyBytes() []byte {
+func generateKeyBytes() ([]byte, error) {
 	mID, err := machineid.ID()
 	if err != nil {
-		// preserve hard-fail behavior in this small CLI utility
-		panic(err)
+		return nil, fmt.Errorf("machine id: %w", err)
 	}
 
 	secretPrefix := os.Getenv("ENCDEC_SECRET_PREFIX")
@@ -64,7 +69,7 @@ func generateKeyBytes() []byte {
 
 	uniqueID := secretPrefix + mID + runtime.GOOS
 	sum := sha256.Sum256([]byte(uniqueID))
-	return sum[:]
+	return sum[:], nil
 }
 
 // EncryptString encrypts plaintext using AES-GCM.
