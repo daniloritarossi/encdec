@@ -1,12 +1,16 @@
 package main
 
 import (
-	"encdenc/lib"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/user"
+	"path/filepath"
+	"runtime"
 	"syscall"
+
+	"encdenc/lib"
 )
 
 var (
@@ -18,67 +22,119 @@ var (
 const pathLog = "/opt/frm/writable/logs/"
 
 func main() {
+	if err := run(os.Args, os.Stdout, os.Stderr); err != nil {
+		// keep non-zero exit code for CLI usage
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
 
-	file, err := os.OpenFile(pathLog+"enc_dec.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
+func run(args []string, stdout, stderr *os.File) error {
+	// Optional logging to file (best-effort). Avoid failing the tool if the log path is not available.
+	setupLogging()
 
-	if err != nil {
-		fmt.Println("Errore:", err)
+	if len(args) < 3 {
+		return errors.New("usage: encdec ENC <plain-text> | encdec DEC <hex-ciphertext> | encdec ENCPASS <plain-text> | encdec DECPASS <p1:ciphertext>")
+	}
+
+	op := args[1]
+	input := args[2]
+
+	// Limit ciphertext size at CLI level as a second line of defense.
+	// (lib layer also enforces bounds)
+	const maxCiphertextHexLen = 1 << 20 // 1 MiB of hex
+	if op == "DEC" && len(input) > maxCiphertextHexLen {
+		return fmt.Errorf("ciphertext too large (max %d hex chars)", maxCiphertextHexLen)
+	}
+
+	switch op {
+	case "ENC":
+		key := lib.GenerateKey()
+		encrypted, err := lib.EncryptString(input, key)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(stdout, "encrypted : %s\n", encrypted)
+		return nil
+	case "DEC":
+		key := lib.GenerateKey()
+		decrypted, err := lib.DecryptString(input, key)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, decrypted)
+		return nil
+	case "ENCPASS":
+		pass := os.Getenv("ENCDEC_PASS")
+		if pass == "" {
+			return errors.New("ENCDEC_PASS env var is required for ENCPASS/DECPASS")
+		}
+		encrypted, err := lib.EncryptStringWithPassphrase(input, pass)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(stdout, "encrypted : %s\n", encrypted)
+		return nil
+	case "DECPASS":
+		pass := os.Getenv("ENCDEC_PASS")
+		if pass == "" {
+			return errors.New("ENCDEC_PASS env var is required for ENCPASS/DECPASS")
+		}
+		decrypted, err := lib.DecryptStringWithPassphrase(input, pass)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintln(stdout, decrypted)
+		return nil
+	default:
+		return errors.New("only ENC, DEC, ENCPASS and DECPASS values are accepted")
+	}
+}
+
+func setupLogging() {
+	// This project was designed to log under a fixed path (pathLog).
+	// Make it safe/cross-platform and best-effort: if it fails, continue without file logging.
+	if pathLog == "" {
 		return
 	}
-	defer file.Close()
 
-	// FileInfo
-	fileInfo, err := os.Stat(pathLog + "enc_dec.log")
-
-	// CHECK permission log file
-	// GET permission file and check if 664 is correct
-	if fmt.Sprintf("%o", fileInfo.Mode().Perm()) != "664" {
-
-		// SET THE LOG WRITE FILE
-		log.SetOutput(file)
-		log.Println("WARNING ::: Current file has no correct 664 permission. I'll Try to correct it, CONTINUE")
-
-		// GET owner file
-		owner, err := user.LookupId(fmt.Sprint(fileInfo.Sys().(*syscall.Stat_t).Uid))
-		if err != nil {
-			fmt.Println("Error for the owner:", err)
-			return
-		}
-		// fmt.Printf("Owner: %s\n", owner.Username)
-
-		// Ottenere le informazioni sull'utente corrente
-		userCurrent, err := user.Current()
-		if err != nil {
-			fmt.Println("Error for the curretn user:", err)
-			return
-		}
-		// Stampa il nome utente corrente
-		// fmt.Printf("Nome Utente Corrente: %s\n", userCurrent.Username)
-		if owner.Username == userCurrent.Username {
-			log.Println("INFO ::: CurrentUser and Owner file is the same, CONTINUE")
-			// Permission change
-			err = os.Chmod(pathLog+"enc_dec.log", 0664)
-
-			if err != nil {
-				log.Println("ERROR ::: CHANGE PERMISSION LOG FILE", err)
-				log.Fatal(err)
-			} else {
-				log.Println("INFO ::: OK ::: CHANGE PERMISSION LOG FILE COMMITTED NO ERRORS  :: END")
-			}
-		} else {
-			log.Println("WARNING ::: CurrentUser and Owner file is not the same")
-		}
-
+	// On Windows, a Unix path like /opt/... will fail.
+	if runtime.GOOS == "windows" && filepath.IsAbs(pathLog) && filepath.VolumeName(pathLog) == "" {
+		return
 	}
 
-	key := lib.GenerateKey()
-	if os.Args[1] == "ENC" {
-		encrypted := lib.EncryptString(os.Args[2], key)
-		fmt.Printf("encrypted : %s\n", encrypted)
-	} else if os.Args[1] == "DEC" {
-		decrypted := lib.DecryptString(os.Args[2], key)
-		fmt.Printf("%s\n", decrypted)
-	} else {
-		log.Fatal("ONLY ENC AND DEC VALUE ACCEPTED")
+	if err := os.MkdirAll(pathLog, 0o775); err != nil {
+		return
+	}
+
+	logPath := filepath.Join(pathLog, "enc_dec.log")
+	file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o664)
+	if err != nil {
+		return
+	}
+	log.SetOutput(file)
+
+	// Permission/owner checks are Unix-specific; keep them only where supported.
+	if runtime.GOOS == "windows" {
+		return
+	}
+
+	fileInfo, err := os.Stat(logPath)
+	if err != nil {
+		return
+	}
+
+	if fileInfo.Mode().Perm() != 0o664 {
+		owner, err := user.LookupId(fmt.Sprint(fileInfo.Sys().(*syscall.Stat_t).Uid))
+		if err != nil {
+			return
+		}
+		userCurrent, err := user.Current()
+		if err != nil {
+			return
+		}
+		if owner.Username == userCurrent.Username {
+			_ = os.Chmod(logPath, 0o664)
+		}
 	}
 }

@@ -1,197 +1,189 @@
-# ENC and DEC STRING 
-## _Developed in GOLANG_
-[![Danilo Ritarossi](https://raw.githubusercontent.com/daniloritarossi/encdec/main/img/background.jpg?raw=true)](https://www.linkedin.com/in/daniloritarossi/)
+# ENCDEC (encrypt/decrypt string)
 
+CLI tool written in Go to encrypt/decrypt strings using AES-GCM.
 
-[![License: GPL v3](https://img.shields.io/badge/license-MIT-green)](https://github.com/daniloritarossi/encanddendc/blob/main/LICENSE)
-[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](https://github.com/gomods/athens)
-![PowerShell Gallery](https://img.shields.io/powershellgallery/p/DNS.1.1.1.1)
-![GO](https://img.shields.io/static/v1?label=Version&message=1.1&color=<COLOR>)
+It supports **two modes**:
 
+1. **Machine-bound mode (default)**: the encryption key is deterministically derived from:
+   - a secret prefix (configurable)
+   - Machine ID
+   - OS  
+   This means ciphertext is typically decryptable only on the *same machine*.
 
+2. **Passphrase mode (portable, optional)**: the encryption key is derived from a passphrase using **Argon2id** with a random salt.
+   Ciphertext is self-contained and can be decrypted on any machine as long as you have the passphrase.
 
+> Security note: this is **not** a password hashing tool. If you need to store user passwords, use a dedicated password hashing algorithm (Argon2id / bcrypt / scrypt).
 
-
-
-Stand alone software developed in GO Language, allows you to uniquely encrypt the string of the application based on keywords:
-
-- Special key
-- Machine ID
-- OS
-
-
-***It is generally very useful for encrypting passwords***
+---
 
 ## Features
 
-- Portability on Windows, MAC and UNIX / LINUX and much more operating systems 
-- Crypt and Decrypt string (password) from a shell_exec
-- Robust string encryption system in GOLANG
-- No further installations are required
-- It has no dependencies on the operating system
+- Cross-platform (Windows / macOS / Linux)
+- Authenticated encryption: **AES-GCM**
+- Two modes:
+  - Machine-bound key derivation (**SHA-256**, 32 bytes → AES-256)
+  - Passphrase-based derivation (**Argon2id + random salt**, AES-256)
+- “Best-effort” logging (does not block encryption/decryption if logging fails)
+- Input size limits (default ~1 MiB) to mitigate trivial local DoS
 
-## Tech
+---
 
-We use a number of open source projects to work properly:
+## Requirements
 
-- [GO] - Developed
+- Go **1.17+** (tested on Go **1.18**)
 
+Dependencies are managed via Go modules (`go.mod`).
 
-And of course Danilo itself is open source with a [public repository][daniloritarossi] on GitHub.
+---
 
-## Installation
+## Installation / Run
 
-ENC and DEC STRING requires [public repository][go] v1.17+ installed to run.
-
-Don't worry everything has been handled with GO modules so you don't have to do anything more than download the project!
-
-***The add-on module used to achieve some functions refering to "github.com/denisbrodbeck/machineid";***
-
-If you want compile the code you need to install the dependency with "github.com/denisbrodbeck/machineid"
-move to directory installation es: c:\Program Files\Go and put the code
+From the module folder (`encdec/`):
 
 ```sh
-go get github.com/denisbrodbeck/machineid
+go mod tidy
 ```
 
-#### Easy to use
+### Encrypt / Decrypt (machine-bound)
 
-Normally you can use directly the executable **encdec** file already generated and ready to use for LINUX distribution in /src folder of your project  (please visit [Linux Executable v1.1]  ) once loaded into the system you can generate the encrypted password as I describe it
-
-ENCRYPT--> You can run the program from the bash command by running the statement:
+Encrypt:
 
 ```sh
-go run main.go ENC 'PasswordToEncrypt'
+go run . ENC 'PasswordToEncrypt'
 ```
 
-The result is something like:
+Output:
 
-```sh
-encrypted : 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
+```txt
+encrypted : <hex-ciphertext>
 ```
 
-DECRYPT--> You can run the program from the bash command by running the statement:
+Decrypt:
 
 ```sh
-go run main.go DEC 26a8d6a84be3c8ae4ef446f32cccc7affcf2d9612a7bc73a19f7821264a8b0f64f
+go run . DEC <hex-ciphertext>
 ```
 
-The result is something like:
+Output:
 
-```sh
+```txt
 PasswordToEncrypt
 ```
-If you want you can generate an executable code, see section "Building for source"
 
-#### Building for source
+---
 
-First you can (recommended to add additional level of security you have to) **change the secret key**
+## Passphrase mode (portable) (optional)
 
-```sh 
-const j = "jY-1"
-```
-even if you don't have to change the special key don't worry the software will use the default string and you can use it anyway
+In this mode the passphrase is read from environment variable `ENCDEC_PASS`
+(to avoid passing secrets through CLI args / history / process list).
 
-Second you **must define the path for the log in main.go line 17**
+Set passphrase:
 
 ```sh
-const pathLog = "/opt/frm/application/libraries/"
+export ENCDEC_PASS='your-strong-passphrase'
 ```
 
-For production release you must move to directory module/program (development) es: c:\Users\MYNAME\Go and past the code:
+Encrypt:
 
 ```sh
-env GOOS=target-OS GOARCH=target-architecture go build package-import-path
+go run . ENCPASS 'PasswordToEncrypt'
 ```
 
-Example is for LINUX release:
-```sh
-env GOOS=linux GOARCH=amd64 go build main.go
-```
-You are generating a build for linux distribution called "main" in the same directory,
-if you want you can create a package with other name, use this code:
+Output:
 
-```sh
-go build -o <your desired name>
+```txt
+encrypted : p1:<salt_b64>:<hex-ciphertext>
 ```
-The example before is like:
+
+Decrypt:
 
 ```sh
-env GOOS=linux GOARCH=amd64 go build -o encdec main.go 
+go run . DECPASS 'p1:<salt_b64>:<hex-ciphertext>'
 ```
 
-you can run the executable from a SHELL_EXEC  in the same way as reported in the "Easy to use" section
+Output:
 
-you can find all the possible export configurations in the [Table of config contents] section.
+```txt
+PasswordToEncrypt
+```
 
-Remember: env is a LINUX COMMAND you must use it in LINUX or in GIT BASH
+Notes:
+- The `p1:` prefix identifies the passphrase ciphertext format version.
+- The salt is encoded using `base64.RawStdEncoding`.
 
-Export variables in LINUX env, Open .bashrc file and add following lines at the bottom and save the file:
+---
+
+## Building
+
+Build binary:
 
 ```sh
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+go build -o encdec .
 ```
-## Errors 
 
-If you meet errors the key is wrong, remember you can use this software only on a single machine
+Cross-compile example (Linux amd64):
 
-## Development
+```sh
+GOOS=linux GOARCH=amd64 go build -o encdec .
+```
 
-Want to contribute? Great!
+---
 
-Make a change in your file and instantaneously see your updates!
+## Configuration / Environment Variables
 
-## Table of config contents 
+### `ENCDEC_SECRET_PREFIX` (machine-bound mode)
 
-The following table shows the possible combinations of GOOS and GOARCH you can use:
+Override the default secret prefix used in machine-bound key derivation:
 
-| GOOS - Target Operating System       | GOARCH - Target Platform  |
-| ------------------------------------ |:-------------------------:| 
-|android	|arm|
-|darwin	|386|
-|darwin	|amd64|
-|darwin	|arm|
-|darwin	|arm64|
-|dragonfly	|amd64|
-|freebsd	|386|
-|freebsd	|amd64|
-|freebsd	|arm|
-|linux	|386|
-|linux	|amd64|
-|linux	|arm|
-|linux	|arm64|
-|linux	|ppc64|
-|linux	|ppc64le|
-|linux	|mips|
-|linux	|mipsle|
-|linux	|mips64|
-|linux	|mips64le|
-|netbsd	|386|
-|netbsd	|amd64|
-|netbsd	|arm|
-|openbsd	|386|
-|openbsd	|amd64|
-|openbsd	|arm|
-|plan9	|386|
-|plan9	|amd64|
-|solaris	|amd64|
-|windows	|386|
-|windows	|amd64|	
+```sh
+export ENCDEC_SECRET_PREFIX='my-secret-prefix'
+```
 
+If you keep the default value, encryption/decryption will still work, but the prefix is not secret if the code is public.
 
+### `ENCDEC_PASS` (passphrase mode)
+
+Required for `ENCPASS` / `DECPASS`:
+
+```sh
+export ENCDEC_PASS='your-strong-passphrase'
+```
+
+---
+
+## Logging
+
+The CLI tries to write logs to:
+
+```go
+const pathLog = "/opt/frm/writable/logs/"
+```
+
+Logging is **best-effort**:
+- if the path is not writable or not suitable for the current OS, the program continues without file logging.
+
+---
+
+## Input size limits
+
+To reduce accidental/malicious resource usage, inputs are limited:
+- plaintext max: ~1 MiB
+- ciphertext max: ~1 MiB (hex chars)
+
+---
+
+## Security model (important)
+
+- **Machine-bound mode** prevents “copy & decrypt on another machine” but does **not** protect against an attacker already running on the same host.
+- **Passphrase mode** provides portability and shifts security to the strength/handling of the passphrase.
+
+---
 
 ## License
 
 GNU General Public License v3.0
-The GNU General Public License v3.0 (GPL) — Danilo Ritarossi. Please have a look at the [public repository][LICENSE.md] for more details.
 
+## Author
 
-**Free Software, Hell Yeah!**
-
-   [daniloritarossi]: <https://github.com/daniloritarossi>
-   [go]: <https://go.dev>   
-   [LICENSE.md]: <https://github.com/daniloritarossi/encdec/blob/main/LICENSE>
-   [Linux Executable v1.1]: <https://github.com/daniloritarossi/encanddendc/releases/tag/v1.1>
-   [Table of config contents]: <https://github.com/daniloritarossi/encdec#table-of-config-contents>
+Danilo Ritarossi
