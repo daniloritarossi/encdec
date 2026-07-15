@@ -1,3 +1,21 @@
+<p align="center">
+  <img src="img/logo.svg" alt="ENCDEC logo" width="220"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-1.17%2B-00ADD8?logo=go&logoColor=white" alt="Go 1.17+"/>
+  <img src="https://img.shields.io/badge/release-v2.0.2-0ea5e9" alt="Release v2.0.2"/>
+  <img src="https://img.shields.io/badge/license-MIT-14b8a6" alt="License MIT"/>
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-1e293b" alt="Platform: Windows, macOS, Linux"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/cipher-AES--256--GCM-0ea5e9" alt="Cipher: AES-256-GCM"/>
+  <img src="https://img.shields.io/badge/KDF-Argon2id%20%C2%B7%20SHA--256-6d28d9" alt="KDF: Argon2id and SHA-256"/>
+  <img src="https://img.shields.io/badge/modes-machine--bound%20%C2%B7%20passphrase-334155" alt="Modes: machine-bound and passphrase"/>
+  <img src="https://img.shields.io/badge/network-100%25%20offline-14b8a6" alt="100% offline"/>
+</p>
+
 # ENCDEC (encrypt/decrypt string)
 
 CLI tool written in Go to encrypt/decrypt strings using **AES-GCM**.
