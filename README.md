@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Go-1.17%2B-00ADD8?logo=go&logoColor=white" alt="Go 1.17+"/>
-  <img src="https://img.shields.io/badge/release-v2.0.2-0ea5e9" alt="Release v2.0.2"/>
+  <img src="https://img.shields.io/badge/release-v2.0.6-0ea5e9" alt="Release v2.0.6"/>
   <img src="https://img.shields.io/badge/license-MIT-14b8a6" alt="License MIT"/>
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-1e293b" alt="Platform: Windows, macOS, Linux"/>
 </p>
