@@ -1,0 +1,111 @@
+<!doctype html><html><head><meta charset="utf-8"><title>encdec banner</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Poppins:wght@600;700&family=Inter:wght@700&display=block" rel="stylesheet">
+<style>
+:root{--bg:#0a1016;--text:#e8eef5;--teal:#2dd4a7;--cyan:#5cc8dc;--muted:#7c8a99;--dim:#5d6b7a;--line:#1b2733;--card:#0a1219;--chip:#111c26}
+*{box-sizing:border-box;margin:0}
+html,body{width:1015px;height:581px;overflow:hidden;background:var(--bg)}
+body{position:relative;font-family:'IBM Plex Mono','DejaVu Sans Mono',monospace;color:var(--text)}
+.bg{position:absolute;inset:0;background:
+ radial-gradient(520px 380px at 12% 8%,rgba(45,212,167,.10),transparent 70%),
+ radial-gradient(620px 420px at 92% 96%,rgba(14,165,233,.09),transparent 70%)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(148,180,200,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(148,180,200,.045) 1px,transparent 1px);background-size:32px 32px}
+.top{position:absolute;left:61px;top:62px;display:flex;align-items:center;gap:13px}
+.badge{border:1.5px solid var(--teal);border-radius:5px;background:rgba(45,212,167,.08);color:var(--teal);font-weight:600;font-size:18px;letter-spacing:.6px;padding:3px 14px 4px;white-space:pre}
+.lang{display:flex;align-items:center;gap:7px;color:var(--muted);font-weight:500;font-size:18px}
+.dot{width:9px;height:9px;border-radius:50%;background:#f5b14c}
+h1{position:absolute;left:61px;top:112px;font:700 102px/1.3 'Inter','DejaVu Sans',sans-serif;letter-spacing:.5px;display:flex;align-items:center}
+.cursor{display:block;width:42px;height:81px;background:var(--teal);margin-left:16px;margin-top:16px}
+.title{position:absolute;left:61px;top:258px;font:700 25px/1.3 'Poppins',sans-serif}
+.sub{position:absolute;left:61px;top:292px;color:var(--cyan);font-size:20px;white-space:pre}
+.rule{position:absolute;left:61px;right:55px;top:342px;height:1px;background:var(--line)}
+.chips{position:absolute;left:61px;top:362px;display:flex;gap:17px}
+.chip{display:flex;align-items:center;gap:7px;height:37px;padding:0 11px 0 10px;border:1px solid var(--line);border-radius:19px;background:var(--chip);font-size:18px;white-space:pre}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--teal)}
+.term{position:absolute;left:61px;right:55px;top:427px;height:94px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
+.lights{position:absolute;left:19px;top:16px;display:flex;gap:11px;align-items:center}
+.lights b{width:11px;height:11px;border-radius:50%}
+.lights span{color:var(--dim);font-size:17px;margin-left:16px;font-weight:400}
+.cmd{position:absolute;left:22px;top:44px;font-size:20px;white-space:pre}
+.cmd em{font-style:normal;color:var(--teal)} .cmd u{text-decoration:none;color:var(--cyan)}
+.foot{position:absolute;left:61px;right:55px;top:538px;display:flex;justify-content:space-between;font-size:18px;color:var(--muted)}
+.foot span:last-child{color:var(--dim)}
+.logo{position:absolute;right:34px;top:64px;width:191px;height:191px}
+</style></head><body><div class="bg"></div><div class="grid"></div>
+<div class="top"><div class="badge">v2.0.7  ·  STABLE RELEASE</div><div class="lang"><span class="dot"></span>Go · cross-platform</div></div>
+<h1>encdec<span class="cursor"></span></h1>
+<div class="title">AES-GCM encryption CLI</div>
+<div class="sub">machine-bound  &amp;  passphrase (Argon2id) modes</div>
+<div class="rule"></div>
+<div class="chips"><div class="chip"><i></i>empty machine ID rejected</div><div class="chip"><i></i>first unit test added</div><div class="chip"><i></i>6 verified targets</div></div>
+<div class="term"><div class="lights"><b style="background:#ec6a5e"></b><b style="background:#f4bf4f"></b><b style="background:#61c554"></b><span>bash</span></div>
+<div class="cmd"><em>$</em> encdec ENCPASS 'secret'  <em>→</em>  <u>p1:&lt;salt&gt;:&lt;cipher&gt;</u></div></div>
+<div class="foot"><span>github.com/daniloritarossi/encdec</span><span>MIT · Windows / Linux / macOS</span></div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="logo" role="img" aria-label="ENCDEC logo: a man putting on a mask">
+  <defs>
+    <linearGradient id="maskGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+    <path id="binPath" d="M256,68 a188,188 0 1,1 -0.01,0" fill="none"/>
+  </defs>
+
+  <!-- badge -->
+  <circle cx="256" cy="256" r="248" fill="#0e1726"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="url(#ringGrad)" stroke-width="6"/>
+
+  <!-- binary ring -->
+  <text font-family="'Courier New',monospace" font-size="16" fill="#38bdf8" opacity="0.28" letter-spacing="6">
+    <textPath href="#binPath">01000101 01001110 01000011 01000100 01000101 01000011 001100 010011 0110</textPath>
+  </text>
+
+  <!-- shoulders -->
+  <path d="M150,470 Q160,380 256,378 Q352,380 362,470 Z" fill="#1e293b"/>
+  <path d="M150,470 Q160,380 256,378 Q352,380 362,470 Z" fill="none" stroke="#334155" stroke-width="3"/>
+
+  <!-- neck -->
+  <rect x="232" y="330" width="48" height="60" rx="16" fill="#e8eef7"/>
+
+  <!-- head -->
+  <ellipse cx="256" cy="235" rx="104" ry="122" fill="#f1f5f9"/>
+
+  <!-- hair -->
+  <path d="M152,225 Q148,110 256,105 Q364,110 360,225 Q356,180 322,160 Q290,146 232,150 Q186,155 172,205 Q166,215 164,232 Q156,235 152,225 Z" fill="#1e293b"/>
+
+  <!-- mask ribbons -->
+  <path d="M158,212 Q110,205 84,182" fill="none" stroke="#0ea5e9" stroke-width="7" stroke-linecap="round"/>
+  <path d="M354,212 Q402,205 428,182" fill="none" stroke="#14b8a6" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- domino mask -->
+  <path d="M152,206
+           Q256,176 360,206
+           Q368,244 336,256
+           Q296,268 256,260
+           Q216,268 176,256
+           Q144,244 152,206 Z"
+        fill="url(#maskGrad)" stroke="#0b1220" stroke-width="4"/>
+
+  <!-- eye holes -->
+  <ellipse cx="212" cy="223" rx="27" ry="14" fill="#f1f5f9"/>
+  <ellipse cx="300" cy="223" rx="27" ry="14" fill="#f1f5f9"/>
+  <circle cx="212" cy="224" r="7" fill="#0e1726"/>
+  <circle cx="300" cy="224" r="7" fill="#0e1726"/>
+
+  <!-- cipher glyphs on mask -->
+  <text x="256" y="250" text-anchor="middle" font-family="'Courier New',monospace" font-size="15" font-weight="bold" fill="#0b1220" opacity="0.55">0 1</text>
+  <text x="176" y="240" text-anchor="middle" font-family="'Courier New',monospace" font-size="12" font-weight="bold" fill="#0b1220" opacity="0.45">#</text>
+  <text x="338" y="240" text-anchor="middle" font-family="'Courier New',monospace" font-size="12" font-weight="bold" fill="#0b1220" opacity="0.45">*</text>
+
+  <!-- nose + mouth -->
+  <path d="M256,262 Q250,290 244,296 Q252,303 262,299" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M228,324 Q256,340 284,324" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- wordmark -->
+  <text x="256" y="446" text-anchor="middle" font-family="'Courier New',monospace" font-size="46" font-weight="bold" fill="#e2e8f0" letter-spacing="8">ENCDEC</text>
+  <text x="256" y="472" text-anchor="middle" font-family="'Courier New',monospace" font-size="15" fill="#38bdf8" letter-spacing="2">mask your secrets</text>
+</svg>
+
+</body></html>

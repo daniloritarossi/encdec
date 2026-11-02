@@ -49,3 +49,7 @@ nbdist/
 # Go workspace file
 go.work 
 logs.txt
+
+# Local audit skill
+.agents/
+skills-lock.json
