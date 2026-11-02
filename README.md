@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Go-1.17%2B-00ADD8?logo=go&logoColor=white" alt="Go 1.17+"/>
-  <img src="https://img.shields.io/badge/release-v2.0.6-0ea5e9" alt="Release v2.0.6"/>
+  <img src="https://img.shields.io/badge/release-v2.0.7-0ea5e9" alt="Release v2.0.7"/>
   <img src="https://img.shields.io/badge/license-MIT-14b8a6" alt="License MIT"/>
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-1e293b" alt="Platform: Windows, macOS, Linux"/>
 </p>
@@ -127,6 +127,13 @@ PasswordToEncrypt
 
 Notes:
 - Decryption succeeds only if performed on the **same machine** (same Machine ID + OS) and with the same `ENCDEC_SECRET_PREFIX` used at encryption time.
+- If the Machine ID is empty or `uninitialized` the tool refuses to run:
+
+  ```txt
+  machine id: empty or uninitialized, refusing to derive a machine-bound key
+  ```
+
+  On Linux, set a real ID (for example `systemd-machine-id-setup`). Ciphertext created by an older version on such a host was not machine-bound: decrypt it with that version first, then encrypt it again once a real ID is set.
 
 ---
 
@@ -384,6 +391,7 @@ ciphertext too large (max 1048576 hex chars)
 ## Security model (important)
 
 - **Machine-bound mode** prevents “copy & decrypt on another machine” but does **not** protect against an attacker already running on the same host.
+- **Machine-bound mode** requires a real machine ID: `ENC` and `DEC` exit with an error when the ID is empty, whitespace-only, or the systemd placeholder `uninitialized`. Without this check the key would depend only on the prefix and the OS, so with the default prefix anyone could compute it. Cloned images that share a real machine ID cannot be detected and still derive the same key.
 - **Passphrase mode** provides portability and shifts security to the strength/handling of the passphrase.
 
 ---

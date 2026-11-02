@@ -45,7 +45,7 @@ const (
 // If machineID changes (or you move the ciphertext to another machine), decryption will fail.
 //
 // It returns an error (instead of panicking) when the machine id cannot be read,
-// so the CLI can honor its contract: print the error on stderr and exit 1.
+// or is empty or a placeholder, so the CLI can honor its contract: print the error on stderr and exit 1.
 func GenerateKey() (string, error) {
 	key, err := generateKeyBytes()
 	if err != nil {
@@ -61,6 +61,9 @@ func generateKeyBytes() ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("machine id: %w", err)
 	}
+	if err := validateMachineID(mID); err != nil {
+		return nil, err
+	}
 
 	secretPrefix := os.Getenv("ENCDEC_SECRET_PREFIX")
 	if secretPrefix == "" {
@@ -70,6 +73,17 @@ func generateKeyBytes() ([]byte, error) {
 	uniqueID := secretPrefix + mID + runtime.GOOS
 	sum := sha256.Sum256([]byte(uniqueID))
 	return sum[:], nil
+}
+
+// validateMachineID rejects values that identify no specific machine.
+// machineid.ID returns a nil error for an empty file, and "uninitialized" is the
+// systemd first-boot placeholder: either would leave the key without machine binding.
+func validateMachineID(id string) error {
+	id = strings.TrimSpace(id)
+	if id == "" || strings.EqualFold(id, "uninitialized") {
+		return errors.New("machine id: empty or uninitialized, refusing to derive a machine-bound key")
+	}
+	return nil
 }
 
 // EncryptString encrypts plaintext using AES-GCM.
